@@ -41,7 +41,7 @@ object BodyFatCalculator {
     }
 
     /** Ranges follow American Council on Exercise (ACE) standards. */
-    private fun categorize(sex: Sex, bf: Double): BodyFatCategory = when (sex) {
+    fun categorize(sex: Sex, bf: Double): BodyFatCategory = when (sex) {
         Sex.MALE -> when {
             bf < 6 -> BodyFatCategory.ESSENTIAL
             bf < 14 -> BodyFatCategory.ATHLETE

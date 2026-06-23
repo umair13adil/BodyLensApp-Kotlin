@@ -3,6 +3,7 @@ package com.bodylens.di
 import android.content.Context
 import androidx.room.Room
 import com.bodylens.core.common.IoDispatcher
+import com.bodylens.data.catalog.ExerciseCatalogLoader
 import com.bodylens.data.local.db.BodyLensDatabase
 import com.bodylens.data.local.db.ProgressDao
 import com.bodylens.data.ml.BodyAnalyzer
@@ -29,6 +30,9 @@ object DataModule {
     @Provides @Singleton fun silhouetteMeasurer() = SilhouetteMeasurer()
 
     @Provides @Singleton fun exercisePlanner() = ExercisePlanner()
+
+    @Provides @Singleton
+    fun exerciseCatalogLoader(context: Context) = ExerciseCatalogLoader(context)
 
     @Provides @Singleton
     fun bodyAnalyzer(

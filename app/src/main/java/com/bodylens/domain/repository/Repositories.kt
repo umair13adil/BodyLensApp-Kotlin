@@ -24,7 +24,12 @@ interface ProgressRepository {
 /** Source of the exercise catalog + plan generation. */
 interface ExercisePlanRepository {
     suspend fun catalog(): List<Exercise>
-    suspend fun generatePlan(profile: UserProfile): ExercisePlan
+
+    /**
+     * Generate a weekly plan. [bodyFatCategory] (from the latest analysis) calibrates
+     * emphasis, volume and cardio; pass null when no reading is available yet.
+     */
+    suspend fun generatePlan(profile: UserProfile, bodyFatCategory: BodyFatCategory? = null): ExercisePlan
 }
 
 /** Profile + onboarding state (DataStore). */

@@ -21,5 +21,8 @@ class UpdateUserProfileUseCase @Inject constructor(
 class GeneratePlanUseCase @Inject constructor(
     private val repository: com.bodylens.domain.repository.ExercisePlanRepository,
 ) {
-    suspend operator fun invoke(profile: UserProfile) = repository.generatePlan(profile)
+    suspend operator fun invoke(
+        profile: UserProfile,
+        bodyFatCategory: com.bodylens.domain.model.BodyFatCategory? = null,
+    ) = repository.generatePlan(profile, bodyFatCategory)
 }
