@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bodylens.core.ui.components.MuscleMap
 import com.bodylens.domain.model.ExercisePlan
 import com.bodylens.domain.model.MuscleVolume
 import com.bodylens.domain.model.WorkoutDay
@@ -43,6 +44,7 @@ fun PlanScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 item { PlanHeader(p) }
+                item { MusclesWorkedCard(p) }
                 items(p.days) { DayCard(it) }
                 if (p.weeklyVolume.isNotEmpty()) {
                     item { WeeklyVolumeCard(p.weeklyVolume) }
@@ -66,6 +68,24 @@ private fun PlanHeader(plan: ExercisePlan) {
             "Emphasis: ${titleCase(plan.emphasis.name)} · Cardio: ${plan.cardioZone2Minutes} min/week (Zone 2)",
             style = MaterialTheme.typography.bodyMedium,
         )
+    }
+}
+
+@Composable
+private fun MusclesWorkedCard(plan: ExercisePlan) {
+    val rx = remember(plan) { plan.days.flatMap { it.prescriptions } }
+    val primary = remember(rx) { rx.flatMap { it.exercise.primaryMuscles }.toSet() }
+    val secondary = remember(rx) { rx.flatMap { it.exercise.secondaryMuscles }.toSet() }
+    if (primary.isEmpty() && secondary.isEmpty()) return
+    ElevatedCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text("Muscles worked", style = MaterialTheme.typography.titleMedium)
+            MuscleMap(
+                primaryMuscles = primary,
+                secondaryMuscles = secondary,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
