@@ -7,4 +7,7 @@ object Routes {
     const val ANALYSIS = "analysis"
     const val PLAN = "plan"
     const val SETTINGS = "settings"
+    const val EXERCISE_DETAIL = "exercise/{exerciseId}"
+
+    fun exerciseDetail(exerciseId: String) = "exercise/$exerciseId"
 }

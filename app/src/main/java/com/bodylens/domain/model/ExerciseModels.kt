@@ -17,6 +17,11 @@ data class Exercise(
     val category: ExerciseCategory = ExerciseCategory.STRENGTH,
     /** Step-by-step cues, available for the UI. */
     val instructions: List<String> = emptyList(),
+    /** Asset-relative path to a demo image, e.g. "exercise_images/0001-x.jpg". Null if none. */
+    val image: String? = null,
+    /** Raw catalog tags kept for display. */
+    val bodyPart: String? = null,
+    val target: String? = null,
 )
 
 data class ExercisePrescription(

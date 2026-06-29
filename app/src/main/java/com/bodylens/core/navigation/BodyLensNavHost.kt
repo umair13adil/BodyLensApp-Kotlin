@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bodylens.feature.analysis.AnalysisResultScreen
 import com.bodylens.feature.capture.CaptureScreen
+import com.bodylens.feature.exercise.ExerciseDetailScreen
 import com.bodylens.feature.onboarding.OnboardingScreen
 import com.bodylens.feature.plan.PlanScreen
 import com.bodylens.feature.progress.ProgressScreen
@@ -51,7 +52,13 @@ fun BodyLensNavHost() {
             })
         }
         composable(Routes.PLAN) {
-            PlanScreen(onBack = { navController.popBackStack() })
+            PlanScreen(
+                onBack = { navController.popBackStack() },
+                onExerciseClick = { id -> navController.navigate(Routes.exerciseDetail(id)) },
+            )
+        }
+        composable(Routes.EXERCISE_DETAIL) {
+            ExerciseDetailScreen(onBack = { navController.popBackStack() })
         }
         composable(Routes.SETTINGS) {
             SettingsScreen(

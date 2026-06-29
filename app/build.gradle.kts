@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
     implementation(libs.mediapipe.tasks.vision)
     implementation(libs.mlkit.segmentation.selfie)
 }

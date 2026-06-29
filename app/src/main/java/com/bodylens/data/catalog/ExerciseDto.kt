@@ -27,6 +27,9 @@ data class ExerciseDto(
     val secondaryMuscles: List<String> = emptyList(),
     val instructions: List<String> = emptyList(),
     val category: String? = null,
+    val image: String? = null,
+    val bodyPart: String? = null,
+    val target: String? = null,
 ) {
     fun toDomain(): Exercise {
         val primary = primaryMuscles.mapNotNull { muscle(it) }.toSet()
@@ -46,6 +49,9 @@ data class ExerciseDto(
             mechanic = mech,
             category = cat,
             instructions = instructions,
+            image = image,
+            bodyPart = bodyPart,
+            target = target,
         )
     }
 }
@@ -105,9 +111,9 @@ private fun category(raw: String?): ExerciseCategory = when (raw?.lowercase()) {
  * user selects in onboarding. Anything that needs a gym/extra kit becomes FULL_GYM.
  */
 private fun equipment(raw: String?): Equipment = when (raw?.lowercase()) {
-    "body only", "none", null -> Equipment.BODYWEIGHT
-    "dumbbell", "kettlebells" -> Equipment.DUMBBELLS
-    "bands" -> Equipment.RESISTANCE_BANDS
+    "body only", "body weight", "none", "assisted", "weighted", null -> Equipment.BODYWEIGHT
+    "dumbbell", "kettlebells", "kettlebell" -> Equipment.DUMBBELLS
+    "bands", "band", "resistance band" -> Equipment.RESISTANCE_BANDS
     else -> Equipment.FULL_GYM // barbell, cable, machine, e-z curl bar, balls, foam roll, other
 }
 

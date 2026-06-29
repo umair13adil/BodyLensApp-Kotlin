@@ -11,7 +11,7 @@ import kotlinx.serialization.json.Json
  *
  * The catalog is static, read-only reference data, so it is parsed once on first
  * access and kept in memory rather than seeded into Room — this keeps it fully
- * offline with no database migration. Parsing ~870 entries is a one-off cost.
+ * offline with no database migration. Parsing ~1320 entries is a one-off cost.
  */
 class ExerciseCatalogLoader(private val context: Context) {
 

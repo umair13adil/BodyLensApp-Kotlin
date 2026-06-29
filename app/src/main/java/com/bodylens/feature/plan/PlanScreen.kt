@@ -1,8 +1,12 @@
 package com.bodylens.feature.plan
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.clip
+import coil.compose.AsyncImage
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -19,6 +23,7 @@ import com.bodylens.domain.model.WorkoutDay
 @Composable
 fun PlanScreen(
     onBack: () -> Unit,
+    onExerciseClick: (String) -> Unit = {},
     viewModel: PlanViewModel = hiltViewModel(),
 ) {
     val plan by viewModel.plan.collectAsState()
@@ -45,7 +50,7 @@ fun PlanScreen(
             ) {
                 item { PlanHeader(p) }
                 item { MusclesWorkedCard(p) }
-                items(p.days) { DayCard(it) }
+                items(p.days) { DayCard(it, onExerciseClick) }
                 if (p.weeklyVolume.isNotEmpty()) {
                     item { WeeklyVolumeCard(p.weeklyVolume) }
                 }
@@ -110,16 +115,50 @@ private fun WeeklyVolumeCard(volume: List<MuscleVolume>) {
 }
 
 @Composable
-private fun DayCard(day: WorkoutDay) {
+private fun DayCard(day: WorkoutDay, onExerciseClick: (String) -> Unit) {
     ElevatedCard(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(day.dayLabel, style = MaterialTheme.typography.titleMedium)
-            day.prescriptions.forEach { rx ->
-                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
-                    Text(rx.exercise.name, style = MaterialTheme.typography.bodyMedium)
-                    Text("${rx.sets} × ${rx.reps}", style = MaterialTheme.typography.bodyMedium)
-                }
+            day.prescriptions.forEach { rx -> ExerciseRow(rx, onExerciseClick) }
+        }
+    }
+}
+
+@Composable
+private fun ExerciseRow(rx: com.bodylens.domain.model.ExercisePrescription, onExerciseClick: (String) -> Unit) {
+    val ex = rx.exercise
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable { onExerciseClick(ex.id) },
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+    ) {
+        ex.image?.let { path ->
+            AsyncImage(
+                model = "file:///android_asset/$path",
+                contentDescription = ex.name,
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            )
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(ex.name, style = MaterialTheme.typography.bodyMedium)
+            val tags = listOfNotNull(ex.bodyPart, ex.target)
+                .map(::titleCase)
+                .distinct()
+                .joinToString(" · ")
+            if (tags.isNotEmpty()) {
+                Text(
+                    tags,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
+        Text("${rx.sets} × ${rx.reps}", style = MaterialTheme.typography.bodyMedium)
     }
 }
